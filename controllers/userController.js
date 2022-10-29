@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
     // Get all users
@@ -32,10 +32,10 @@ module.exports = {
             { $set: req.body },
             { runValidators: true, new: true }
         )
-            .then((course) =>
-                !course
+            .then((thought) =>
+                !thought
                     ? res.status(404).json({ message: 'No user with this id!' })
-                    : res.json(course)
+                    : res.json(thought)
             )
             .catch((err) => res.status(500).json(err));
     },
@@ -45,20 +45,9 @@ module.exports = {
             .then((user) =>
                 !user
                     ? res.status(404).json({ message: 'No user with that ID' })
-                    : Course.findOneAndUpdate(
-                        { users: req.params.userId },
-                        { $pull: { users: req.params.userId } },
-                        { new: true }
-                    )
+                    : Thought.deleteMany({ _id: { $in: user.thoughts } })
             )
-            .then((thought) =>
-                !thought
-                    ? res.status(404).json({
-                        message: 'User deleted, but no thoughts found',
-                    })
-                    : res.json({ message: 'User successfully deleted' })
-            )
-            .then(() => res.json({ message: 'User deleted!' }))
+            .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
             .catch((err) => res.status(500).json(err));
     },
     // Adds friend
@@ -67,7 +56,7 @@ module.exports = {
         console.log(req.body);
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            { $addToSet: { friends: req.body } },
+            { $addToSet: { friends: req.params.friendsId } },
             { runValidators: true, new: true }
         )
             .then((user) =>
@@ -84,7 +73,7 @@ module.exports = {
     removeFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            { $pull: { friend: { friendId: req.params.friendId } } },
+            { $pull: { friends: { friendId: req.params.friendId } } },
             { runValidators: true, new: true }
         )
             .then((user) =>
