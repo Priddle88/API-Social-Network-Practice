@@ -44,3 +44,11 @@ const userSchema = new Schema(
     id: false,
   }
 );
+
+userSchema.virtual('friendCount').get(function () {
+  return this.friends.length;
+});
+//Might be wrong. Got from Post.js model in Activity 21 - virtuals
+const Post = model('user', userSchema);
+
+module.exports = Post;
