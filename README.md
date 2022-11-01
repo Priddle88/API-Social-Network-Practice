@@ -10,6 +10,10 @@ SO THAT my website can handle large amounts of unstructured data
 
 I had the task of creating an api for a social network page. It was fun learning how everything works and connects. Added and removing the friend took a little bit to figure out.
 
+## Video
+
+[Demo of API](https://youtu.be/vX-30swyDvg)
+
 ## Table of Contents
 
 - [Installation](#installation)
